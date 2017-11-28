@@ -12,14 +12,14 @@ public class ShadowState
 	public Vector3 lossyScale;
 };
 
-public class PhantomTransform : MonoBehaviour {
+public class ShadowTransform : MonoBehaviour {
 
 	[SerializeField] public List<ShadowState> phantoms = new List<ShadowState>();
 	public Color shadowColor = new Color (0.6f, 0.15f, 0.7f, 0.4f);
 
 	// Use this for initialization
 	void Awake () {
-		if (this.gameObject.GetComponents<PhantomTransform> ().Length > 1) {
+		if (this.gameObject.GetComponents<ShadowTransform> ().Length > 1) {
 			Debug.LogWarning ("This GameObject (" + this.gameObject.name +") already has one shadow transform!");
 			Destroy (this);
 		}

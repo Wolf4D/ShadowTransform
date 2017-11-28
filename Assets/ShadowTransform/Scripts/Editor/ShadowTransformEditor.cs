@@ -2,19 +2,19 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(PhantomTransform))]
+[CustomEditor(typeof(ShadowTransform))]
 //[ExecuteInEditMode]
-public class PhantomTransformEditor : Editor {
+public class ShadowTransformEditor : Editor {
 
 int oldShadow = -1;
 
 int cselect = -1;
 string newPhantomName = "Base state";
-	[SerializeField]	PhantomTransform shadow;
+	[SerializeField]	ShadowTransform shadow;
 
 void Awake()
 {
-    shadow = (PhantomTransform)this.target;
+    shadow = (ShadowTransform)this.target;
 		cselect = shadow.CurrentPhantom ();
 }
 
@@ -120,10 +120,10 @@ void ButtonFunction1()
 		Transform tmp = (Transform)command.context;
 		if (tmp != null) 
 		{
-			if (!tmp.gameObject.GetComponent<PhantomTransform> ()) {
+			if (!tmp.gameObject.GetComponent<ShadowTransform> ()) {
 				//tmp.gameObject.AddComponent<PhantomTransform> ();
-				Undo.AddComponent<PhantomTransform> (tmp.gameObject);
-				PhantomTransform shadowtr = tmp.gameObject.GetComponent<PhantomTransform> ();
+				Undo.AddComponent<ShadowTransform> (tmp.gameObject);
+				ShadowTransform shadowtr = tmp.gameObject.GetComponent<ShadowTransform> ();
 				for(int i=0; i<tmp.gameObject.GetComponents<Component>().Length; i++)
 					UnityEditorInternal.ComponentUtility.MoveComponentUp(shadowtr);
 			}
