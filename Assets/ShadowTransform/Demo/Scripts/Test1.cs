@@ -8,9 +8,11 @@ public class Test1 : MonoBehaviour {
 
 	void Awake()
 	{
-		//Debug.Log ("123");
-		SceneTourWindow w = ScriptableObject.CreateInstance<SceneTourWindow>();
-		w.Show ();
+		if (!Application.isPlaying) {
+			//Debug.Log ("123");
+			SceneTourWindow w = ScriptableObject.CreateInstance<SceneTourWindow> ();
+			w.Show ();
+		}
 	}
 
 }
