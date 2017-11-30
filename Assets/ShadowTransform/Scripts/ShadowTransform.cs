@@ -12,6 +12,7 @@ public class ShadowState
 	public Vector3 lossyScale;
 };
 
+[DisallowMultipleComponent]
 public class ShadowTransform : MonoBehaviour {
 
 	[SerializeField] public List<ShadowState> phantoms = new List<ShadowState>();

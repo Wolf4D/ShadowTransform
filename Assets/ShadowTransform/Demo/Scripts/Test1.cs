@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class Test1 : MonoBehaviour {
 
 
@@ -10,8 +10,9 @@ public class Test1 : MonoBehaviour {
 	{
 		if (!Application.isPlaying) {
 			//Debug.Log ("123");
-			SceneTourWindow w = ScriptableObject.CreateInstance<SceneTourWindow> ();
+			SceneTourWindow w = EditorWindow.GetWindow<SceneTourWindow> ();
 			w.Show ();
+			//DestroyImmediate (this);
 		}
 	}
 
