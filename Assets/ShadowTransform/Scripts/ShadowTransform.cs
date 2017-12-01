@@ -108,7 +108,7 @@ public class ShadowTransform : MonoBehaviour {
 			//{
 			Vector3 objInView = Camera.current.WorldToViewportPoint (obj.position);
 			if ((objInView.x>=0) && (objInView.x<=1) && (objInView.y>=0) && (objInView.y<=1) && (objInView.z>0))
-				Handles.Label (obj.position, this.gameObject.name + "\n" + obj.name);
+				Handles.Label (obj.position, obj.name + "\n(" + this.gameObject.name + ")");
 			//}
 			//else
 			//	Handles.Label (obj.position, this.gameObject.name + "\n" + obj.name);
