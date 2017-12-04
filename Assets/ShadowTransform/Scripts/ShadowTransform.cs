@@ -32,7 +32,7 @@ public class ShadowTransform : MonoBehaviour {
 	{
 		ShadowState newShadow = new ShadowState ();
 
-		newShadow.name = pname + " (" + phantoms.Count + ")";
+		newShadow.name = pname; // + " (" + phantoms.Count + ")";
 		newShadow.position = this.gameObject.transform.position;
 		newShadow.eulerAngles = this.gameObject.transform.eulerAngles;
 		//Debug.Log (newShadow.eulerAngles);
