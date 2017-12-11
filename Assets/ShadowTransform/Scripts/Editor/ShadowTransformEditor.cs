@@ -48,7 +48,7 @@ public override void OnInspectorGUI()
     {
         string[] tst = new string[shadow.phantoms.Count];
         for (int i = 0; i < shadow.phantoms.Count; i++)
-            tst [i] = shadow.phantoms [i].name;
+				tst [i] = shadow.phantoms [i].name + " (" + i + ")";
 
         EditorGUILayout.LabelField ("State:", styleCenter);
         cselect = EditorGUILayout.Popup ("", cselect, tst);
