@@ -14,12 +14,12 @@ public class BallBreaks : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.LeftAlt)) {
+		if (Input.GetKeyDown (KeyCode.LeftShift)) {
 			this.GetComponent<Rigidbody> ().drag = oldDrag * 5.0f;
 			this.GetComponent<Rigidbody> ().angularDrag = oldADrag * 5.0f;		
 		}
 
-		if (Input.GetKeyUp (KeyCode.LeftAlt)) {
+		if (Input.GetKeyUp (KeyCode.LeftShift)) {
 			this.GetComponent<Rigidbody> ().drag = oldDrag;
 			this.GetComponent<Rigidbody> ().angularDrag = oldADrag;		
 		}
