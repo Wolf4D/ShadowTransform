@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 [ExecuteInEditMode]
-public class Test2 : MonoBehaviour {
+public class TourLauncher : MonoBehaviour {
 	public bool ShowTour;
 
 	void Awake()
