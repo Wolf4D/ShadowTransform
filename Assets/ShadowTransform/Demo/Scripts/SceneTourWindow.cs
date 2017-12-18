@@ -19,19 +19,17 @@ using UnityEditor;
 [System.Serializable]
 public class TourStages
 {
-	public TourStages(string ctitle, string cmainText, Vector3 cposition, Vector3 ceulerAngles, bool cplay=false) 
+	public TourStages(string ctitle, string cmainText, GameObject cfocusObject = null, bool cplay=false) 
 	{
 		title = ctitle;
 		mainText = cmainText;
-		cposition = position;
-		ceulerAngles = eulerAngles;
+		focusObject = cfocusObject;
 		playTest = cplay;
 	}
 
         public string title = "";       // tour screen titla
         public string mainText = "";    // main text of the screen
-        public Vector3 position;        // camera position for this
-	public Vector3 eulerAngles;
+	public GameObject focusObject;        // camera position for this
 	public bool playTest = false;
 };
 
@@ -43,10 +41,8 @@ public class SceneTourWindow : EditorWindow {
 
 	int currentStage = 0;
 
-
 	void Awake()
 	{
-		currentStage = 11;
 		this.titleContent = new GUIContent("Quick tutorial");
 		this.minSize = new Vector2 (410,220);
 
@@ -54,61 +50,57 @@ public class SceneTourWindow : EditorWindow {
 			"Thank you for downloading our product.\n\n" +
 		"This window will guide you throught our great <b>10 steps tour</b>.\n" +
 		"We will show you main capabilities of our <b>ShadowTransform</b>.\n\n" +
-		"P.S. You can return to this tutorial any time you want using <b><i>''Launch tutorial''</i></b> object in this scene.", new Vector3 (), new Vector3 ());
+			"P.S. You can return to this tutorial any time you want using <b><i>''Launch tutorial''</i></b> object in this scene.");
 
 		stages [1] = new TourStages ("1. What is ShadowTransform?", 
 			"\n<b>ShadowTransform</b> is a tool to make process of creation and tweaking your levels more comfortable.\n\n" +
 			"It will <b>remember previous positions</b> for any of your objects and let you <b>switch between them</b> in one click.\n\n" +
 			"<b><i>Just move your object without fear of loosing its old perfect position.</i></b>\n" +
-			"Our ShadowTransform will take care of this for you!", new Vector3 (), new Vector3 ());
+			"Our ShadowTransform will take care of this for you!", GameObject.Find("RollerBall"));
 
 		stages [2] = new TourStages ("2. Usage of ShadowTransform", 
 			"\nOkay, let's take a look at this scene.\n" +
 			"Consider this as a level of some jumping arcade game.\n\n" +
 			"This level is still <b>in the middle of tweaking process</b> - we've made some experimental changes in player's physics " +
-			"to make gameplay more interesting.\n\nIt is a good time to make a play-test.\n<b>Press >> to try this level out!</b>", new Vector3 (), new Vector3 ());
+			"to make gameplay more interesting.\n\nIt is a good time to make a play-test.\n<b>Press >> to try this level out!</b>", GameObject.Find("JumpPad"));
 
 		stages [3] = new TourStages ("3. Play!", 
-			"\nWe think, you <b>won't</b> get to the landing pad, marked with yellow light.\n\n\n\n\n<b>But that's ok.</b> " +
-			"Latest experimetal tweaks made this part of our level totally unpassable.", new Vector3 (), new Vector3 (), true);
+			"\nWe think, you <b>won't</b> get to the landing pad, marked with yellow light from the first trys.\n\n\n\n\n<b>But that's ok.</b> " +
+			"Latest experimetal tweaks made this part of our level nearly unpassable.", null, true);
 
 		stages [4] = new TourStages ("4. Switching between saved states", 
-			"\nBut two of our designers, <b><i>Alice</i></b> and <b><i>Bob</i></b>, has proposed their own fixes. " +
+			"\nBut two of our designers, <b><i>Alice</i></b> and <b><i>Bob</i></b>, has proposed their fixes. " +
 			"That variants <b>(states)</b> stored by <b>ShadowTransform</b>.\n" +
 			"<b>To test both of them, just:</b> \n\n" +
-			"<b>1)</b> Select a <b>LandingPad object</b>,\n" +
-			"<b>2)</b> Find a <b>Shadow Transform</b> among its components,\n" +
+			"<b>1)</b> Select a <b>LandingPad object</b>.\n" +
+			"<b>2)</b> Find a <b>Shadow Transform</b> among components.\n" +
 			"<b>3)</b> Switch between states using <b><< or >> buttons</b>.\n\n" +
-			"Try our gameplay with each of the variants!", new Vector3 (), new Vector3 ());
+			"Try to pass this place with each of the variants!", GameObject.Find("LandingPad"));
 
 		stages [5] = new TourStages ("5. What are states?", 
 			"\nBoth of that <b>states</b> were remembered by <b>ShadowTransform</b>.\n" +
 			"\nJust one click, and <b>object's position, rotation and scale</b> will return to some previous state.\n" +
 			"Also, you can select desired state using <b>drop-down list</b>.\n\n\n" +
 			"That's how you may <b>switch between saved object's states</b>.\n" +
-			"And you may do this in Inspector even during play!" 
-			, new Vector3 (), new Vector3 ());
+			"And you may do this in Inspector even during play!");
 
 		stages [6] = new TourStages ("6. ...and that purple things..?", 
 			"\nThat misterious things are <b>visual representations</b> for remembered states. That things are called <b>shadows</b>." +
 			"\n\nEach shadow is labeled by the <b>state's name</b> and <b>object's name</b>.\n" +
-			"\nYou may <b>click</b> on a shadow to <b>select a corresponding object</b>.\n"
-			, new Vector3 (), new Vector3 ());
+			"\nYou may <b>click</b> on a shadow to <b>select a corresponding object</b>.\n", GameObject.Find("CrateAtEntrance"));
 
 		stages [7] = new TourStages ("7. Let's make some play-testing!", 
 			"\nSelect a <b>RollerBall object</b> and switch its state to <b>''At the begining of the ladder''</b>.\n\n" +
-			"<b>Ok.</b> Now play and try to pass through the <b>TooSmallPlatform</b>." +
+			"<b>Ok.</b> Now play and try to pass through the <b>next platform</b>." +
 			"\n\nSwitch its <b><i>state</i></b> to another and try to <b>play again</b>.\n" +
-			"\nSee?\n<i>Play-testing a certain part of the level now is the easiest thing!</i>"
-			, new Vector3 (), new Vector3 ());
+			"\nSee?\n<i>Play-testing a certain part of the level now is the easiest thing!</i>", GameObject.Find("Ladder1"));
 
 		stages [8] = new TourStages ("8. Adding ShadowTransform to object", 
 			"\nYou can easily add a new ShadowTransform to any of your GameObjects.\n" +
 			"Let's try this together on a <b>TooSmallPlatform</b>:\n\n" +
 			"<b>1)</b> Select a <b>TooSmallPlatform object</b>,\n" +
 			"<b>2)</b> Right-click at <b>Transform component</b> and select <i><b>Add Shadow Transform</b></i>.\n" +
-			"\nSee new <b>ShadowTransform</b>?"
-			, new Vector3 (), new Vector3 ());
+			"\nSee new <b>ShadowTransform</b>?", GameObject.Find("TooSmallPlatform"));
 
 		stages [9] = new TourStages ("9. Adding new states", 
 			"\nHow to add a new state in object's <b>ShadowTransform</b>?\n\n" +
@@ -117,21 +109,18 @@ public class SceneTourWindow : EditorWindow {
 			"Enter here name for a new state.\n" +
 			"<b>3)</b> Click on <b>+</b> button between arrows." +
 			"\n\n<b>Try it!</b> Add a <b><i>base state</i></b> to <b>TooSmallPlatform</b>, " +
-			"change <b><i>Scale</i></b> by <b><i>X</i></b> to 10, then add an <b><i>another state</i></b>."
-			, new Vector3 (), new Vector3 ());
+			"change <b><i>Scale</i></b> by <b><i>X</i></b> to 10, then add an <b><i>another state</i></b>.", GameObject.Find("TooSmallPlatform"));
 
 		stages [10] = new TourStages ("10. Deleting saved state", 
 			"\nAnd, at last, if you don't need any of states anymore, you may delete it:\n\n" +
 			"<b>1)</b> Switch to state you want to delete,\n" +
 			"<b>2)</b> Click on <b>-</b> button between arrows.\n\n" +
-			"After deleting a state, <b>ShadowTransform</b> will automatically switch to a previous one (if exists)."
-			, new Vector3 (), new Vector3 ());
+			"After deleting a state, <b>ShadowTransform</b> will automatically switch to a previous one (if exists).", GameObject.Find("TooSmallPlatform"));
 
 		stages [11] = new TourStages ("Thanks for choosing ShadowTransform!", 
 			"\nNow you know how to use <b>ShadowTransform</b> and ready to unleash its power in your projects!\n\n" +
 			"<b>REMEMBER!</b> This asset is free for ANY LEGAL USAGE - just mention our asset in your credits, and write a small letter to us, please :)\n" +
-			"Read a readme file for an additional info. If you need some help, advice or technical support, you may write to: Wolf4D@list.ru, Ivan Klenov, at your service :)"
-			, new Vector3 (), new Vector3 ());
+			"Read a readme file for an additional info. If you need some help, advice or technical support, you may write to: Wolf4D@list.ru, Ivan Klenov, at your service :)");
 
 		//+
 		//"See that <b>purple things?</b> That's <b><i>object shadows</i></b> - a visual representations of objects saved states. " +
@@ -203,9 +192,18 @@ P.S. If you became too boored, you can end up your tour by closing this window. 
 		
 		if (GUILayout.Button (">>")) {
 			currentStage++;
+			//Debug.Log (stages [currentStage].focusObject);
+			if (stages [currentStage].focusObject != null) 
+			{
+				EditorGUIUtility.PingObject (stages [currentStage].focusObject);
+				Selection.activeGameObject = stages [currentStage].focusObject;
+				SceneView.lastActiveSceneView.FrameSelected ();
+			}
 			if (stages [currentStage].playTest)
 			if (!EditorApplication.isPlaying)
 				EditorApplication.isPlaying = true;
+
+
 		}
 
 		GUILayout.EndHorizontal ();
