@@ -1,7 +1,21 @@
-﻿using UnityEngine;
+﻿///////////////////////////////////////////////////////////////////////////////
+// ShadowTransform by Ivan Klenov (aka Wolf4D). 2017.
+//
+// All rights reserved.
+// Under Creative Commons Attribution (CC BY) License.
+// So, use it as you wish, just include me in credits.
+/////////////////////////////
+//
+// Class for Tutorial Tour window. A very tricky thing.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+using UnityEngine;
 using UnityEditor;
 
-
+///////////////////////////////////////////////////////////////////////////////
+// An additional class to save a tour stages.
+// Needs to be serializable to be used properly.
 [System.Serializable]
 public class TourStages
 {
@@ -14,13 +28,14 @@ public class TourStages
 		playTest = cplay;
 	}
 
-	public string title = "";
-	public string mainText = "";
-	public Vector3 position;
+        public string title = "";       // tour screen titla
+        public string mainText = "";    // main text of the screen
+        public Vector3 position;        // camera position for this
 	public Vector3 eulerAngles;
 	public bool playTest = false;
 };
 
+///////////////////////////////////////////////////////////////////////////////
 
 public class SceneTourWindow : EditorWindow {
 	bool doNotShowAnymore = false;

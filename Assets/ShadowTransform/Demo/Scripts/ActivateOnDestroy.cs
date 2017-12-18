@@ -6,25 +6,21 @@
 // So, use it as you wish, just include me in credits.
 /////////////////////////////
 //
-// Class to control the UI timer.
+// This class activates some object at destruction of this script.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
-public class TimerAtUI : MonoBehaviour
+public class ActivateOnDestroy : MonoBehaviour
 {
-    private Text text;          // text UI component for timer
-    public string timerText;    // additional text before the time in UI
+    public GameObject objectToActivate;
 
-    void Start () {
-        text = GetComponent<Text> ();
-    }
-
-    void FixedUpdate () {
-        text.text = timerText + Time.timeSinceLevelLoad + " sec";
+    void OnDestroy()
+    {
+        if (objectToActivate!=null)
+            objectToActivate.SetActive (true);
     }
 }
 
