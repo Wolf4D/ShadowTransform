@@ -24,9 +24,6 @@ public class ObjectDestroyerZone : MonoBehaviour {
 			tmp.transform.rotation = target.transform.rotation;
 
 			Destroy (target.transform.gameObject, timer);
-
-
-				
 		}
 		//Debug.Log (target);
 	}
