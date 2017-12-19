@@ -81,9 +81,9 @@ public class ShadowTransform : MonoBehaviour {
         foreach (ShadowState obj in phantoms)
             if (obj!=null)
             {
-                if ((obj.position == this.transform.position) &&
-                        (obj.eulerAngles == this.transform.eulerAngles) &&
-                        (obj.lossyScale == this.transform.lossyScale))
+				if (VectorsAreEqual(obj.position, this.transform.position) &&
+					VectorsAreEqual(obj.eulerAngles, this.transform.eulerAngles) &&
+					VectorsAreEqual(obj.lossyScale, this.transform.lossyScale))
                     current = phantoms.LastIndexOf (obj);
             }
 
@@ -116,5 +116,12 @@ public class ShadowTransform : MonoBehaviour {
             //Gizmos.DrawIcon (obj.position, "shadowtransformicon.png");
         }
     }
+
+	bool VectorsAreEqual(Vector3 one, Vector3 two)
+	{
+		return (Mathf.Approximately (one.x, two.x) &&
+				Mathf.Approximately (one.y, two.y) &&
+				Mathf.Approximately (one.z, two.z));
+	}
 
 }
