@@ -70,6 +70,8 @@ public class ShadowTransformEditor : Editor
         if (shadow.phantoms.Count > 0)
             if (GUILayout.Button ("<<"))
             {
+				Undo.RegisterFullObjectHierarchyUndo(((ShadowTransform)this.target).gameObject, "changing a shadow state");
+
                 if (cselect <= 0)
                     cselect = shadow.phantoms.Count-1;
                 else
@@ -79,6 +81,8 @@ public class ShadowTransformEditor : Editor
         if (cselect<0)
             if (GUILayout.Button ("+"))
             {
+				Undo.RegisterFullObjectHierarchyUndo(((ShadowTransform)this.target).gameObject, "adding a shadow state");
+
                 //if (shadow.phantoms.Count == 0)
                     doNotRepaintTimes = 1;
 
@@ -92,6 +96,7 @@ public class ShadowTransformEditor : Editor
             if 	(cselect>=0)
                 if (GUILayout.Button ("-"))
                 {
+                    Undo.RegisterFullObjectHierarchyUndo(((ShadowTransform)this.target).gameObject, "deleting a shadow state");
                     shadow.DeletePhantom ();
                     cselect--;
 
@@ -102,6 +107,7 @@ public class ShadowTransformEditor : Editor
         if (shadow.phantoms.Count > 0)
             if (GUILayout.Button (">>"))
             {
+                Undo.RegisterFullObjectHierarchyUndo(((ShadowTransform)this.target).gameObject, "changing a shadow state");
                 if (cselect >= shadow.phantoms.Count-1)
                     cselect = 0;
                 else
