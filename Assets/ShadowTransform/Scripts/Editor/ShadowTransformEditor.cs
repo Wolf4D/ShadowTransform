@@ -79,7 +79,7 @@ public class ShadowTransformEditor : Editor
         if (cselect<0)
             if (GUILayout.Button ("+"))
             {
-                if (shadow.phantoms.Count == 0)
+                //if (shadow.phantoms.Count == 0)
                     doNotRepaintTimes = 1;
 
                 shadow.AddPhantom(newPhantomName);
@@ -95,7 +95,7 @@ public class ShadowTransformEditor : Editor
                     shadow.DeletePhantom ();
                     cselect--;
 
-                    if (shadow.phantoms.Count == 0)
+                    //if (shadow.phantoms.Count == 0)
                         doNotRepaintTimes = 1;
                 }
 

@@ -193,8 +193,15 @@ P.S. If you became too boored, you can end up your tour by closing this window. 
 
 		GUILayout.BeginHorizontal ();
 
-		if (GUILayout.Button ("<<")) 
+		if (GUILayout.Button ("<<")) {
 			currentStage--;
+			if (stages [currentStage].focusObject != null) 
+			{
+				EditorGUIUtility.PingObject (stages [currentStage].focusObject);
+				Selection.activeGameObject = stages [currentStage].focusObject;
+				SceneView.lastActiveSceneView.FrameSelected ();
+			}
+		}
 		
 		if (GUILayout.Button (">>")) {
 			currentStage++;
