@@ -2,15 +2,21 @@
 using System.Collections;
 using UnityEditor;
 
+///////////////////////////////////////////////////////////////////////////////
+
 [CustomEditor(typeof(ShadowTransform))]
 //[ExecuteInEditMode]
-public class ShadowTransformEditor : Editor {
+public class ShadowTransformEditor : Editor
+{
 
     int oldShadow = -1;
-
     int cselect = -1;
     string newPhantomName = "Base state";
     [SerializeField] ShadowTransform shadow;
+
+    int doNotRepaintTimes = 0;
+
+///////////////////////////////////////////////////////////////////////////////
 
     void Awake()
     {
@@ -18,31 +24,32 @@ public class ShadowTransformEditor : Editor {
         cselect = shadow.CurrentPhantom ();
     }
 
+///////////////////////////////////////////////////////////////////////////////
+
     // Use this for initialization
     public override void OnInspectorGUI()
     {
-        if ((shadow.gameObject.isStatic && Application.isPlaying)) {
+        //Debug.Log(Event.current.type);
+
+        if ((Event.current.type == EventType.Repaint) && (doNotRepaintTimes > 0))
+        {
+            //Debug.Log("Rbrake!");
+            doNotRepaintTimes--;
+            return;
+        }
+
+        if ((shadow.gameObject.isStatic && Application.isPlaying))
+        {
             EditorGUILayout.HelpBox ("Sorry, operations with static objects are not avalible in play mode!", MessageType.Warning, true);
             return;
         }
-        //if (Event.current.type == EventType.Layout)
-        //	return;
 
         GUIStyle styleCenter = new GUIStyle (GUI.skin.label);
         styleCenter.alignment = TextAnchor.MiddleCenter;
 
-
-
-        //	if (shadow.phantoms.Count > 0)
-        //		newPhantomName = "Alternative state";
-
-
-
         cselect = shadow.CurrentPhantom ();
-        if 	(cselect<0)
+        if (cselect<0)
             newPhantomName = GUILayout.TextField(newPhantomName);
-
-
 
         if (shadow.phantoms.Count > 0)
         {
@@ -61,16 +68,22 @@ public class ShadowTransformEditor : Editor {
         EditorGUILayout.BeginHorizontal ();
 
         if (shadow.phantoms.Count > 0)
-            if (GUILayout.Button ("<<")) {
+            if (GUILayout.Button ("<<"))
+            {
                 if (cselect <= 0)
                     cselect = shadow.phantoms.Count-1;
                 else
                     cselect--;
             }
 
-        if 	(cselect<0)
+        if (cselect<0)
             if (GUILayout.Button ("+"))
+            {
+                if (shadow.phantoms.Count == 0)
+                    doNotRepaintTimes = 1;
+
                 shadow.AddPhantom(newPhantomName);
+            }
 
         //Color newShadowColor = new Color (0.6f, 0.15f, 0.7f, 0.4f);
         //newShadowColor = EditorGUILayout.ColorField (newShadowColor);
@@ -81,6 +94,9 @@ public class ShadowTransformEditor : Editor {
                 {
                     shadow.DeletePhantom ();
                     cselect--;
+
+                    if (shadow.phantoms.Count == 0)
+                        doNotRepaintTimes = 1;
                 }
 
         if (shadow.phantoms.Count > 0)
@@ -100,7 +116,9 @@ public class ShadowTransformEditor : Editor {
         oldShadow = cselect;
 
     }
-    // Add a menu item called "Double Mass" to a Rigidbody's context menu.
+
+///////////////////////////////////////////////////////////////////////////////
+
     [MenuItem("CONTEXT/Transform/Add Shadow Transform")]
     static void AddShadowTransform(MenuCommand command)
     {
@@ -117,11 +135,9 @@ public class ShadowTransformEditor : Editor {
             else
                 Debug.LogWarning ("This GameObject (" + tmp.gameObject.name +") already has one shadow transform!");
         }
-        /*
-                Rigidbody body = (Rigidbody)command.context;
-                body.mass = body.mass * 2;
-                Debug.Log("Doubled Rigidbody's Mass to " + body.mass + " from Context Menu.");
-                */
+
     }
 
 }
+
+///////////////////////////////////////////////////////////////////////////////
