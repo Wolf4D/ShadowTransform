@@ -29,23 +29,32 @@ public class TourStages
 
     public string title = "";             // tour screen title
     public string mainText = "";          // main text of the screen
-    public GameObject focusObject;        // camera position for this
-    public bool playTest = false;
+    public GameObject focusObject;        // object for camera targeting
+    public bool playTest = false;		  // start game at this state?
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 public class SceneTourWindow : EditorWindow
 {
+	// Does this window needs to be hidden?
     bool doNotShowAnymore = false;
+
+	// Stages (screens) of tour
     TourStages[] stages = new TourStages[12];
 
+	// Current stage
     int currentStage = 0;
 
+/////////////////////////////
+
+	// Let's fill all data before showing our window
     void Awake()
     {
         this.titleContent = new GUIContent("Quick tutorial");
         this.minSize = new Vector2 (410,220);
+
+		// Filling stages with text and config data before starting
 
         stages [0] = new TourStages ("Welcome to ShadowTransform Tutorial!\n",
                                      "Thank you for downloading our product.\n\n" +
@@ -123,59 +132,21 @@ public class SceneTourWindow : EditorWindow
                                       "<b>REMEMBER!</b> This asset is free for ANY LEGAL USAGE - just mention our asset in your credits, and write a small letter to us, please :)\n" +
                                       "Read a readme file for an additional info. If you need some help, advice or technical support, you may write to: Wolf4D@list.ru, Ivan Klenov, at your service :)");
 
-        //+
-        //"See that <b>purple things?</b> That's <b><i>object shadows</i></b> - a visual representations of objects saved states. " +
-        //"They're labeled with state names. <i>You may select objects by clicking on them.</i>"
-        /*
-                ST умеет запоминать несколько положений объекта и переключать
-                ся между ними.
-                одним нажатием
-                С ST Вы можете проводить плей-тесты, сравнивая
-                эстетическое чувство подсказывает, что объект
-                шобъект нужно чуть переместить,
-                Перемещая объекты, Вы боитесь потерять идеально рассчитанную начальную позицию? Теперь ST совозьмёт на себя заботы об этом
-                Проектируйте уров
-                Перепроектируйте уровни, перемещайте объекты, проводите плей-тесты различных ситуаций - ST поможет Вам!
-                ShadowTransform is a nice tool to make creation and tweaking of your levels more comfortable.
-                It remembers old
-                It can remember previous positions of your object and sw
-                any of
-                itch between them in one click.
-                Just move your object
-                without fear of loosing its
-                Now ShadowTransform will take care of this!
-                for you
-                        Move, rotate and scale your scenery, monsters, player. Make a play-testing of different game situations.
-                        a better one.
-                        and so on
-                        with a
-                        ShadowTransform will help you.
-
-// Ограничения - вложенные объекты не отображаются, их состояние не сохраняется
-// при изменении родителей - неюниформное масштабирование - известная проблема Unity. Может быть исправлена в следующих версиях
-// Однако, при unparenting-е всё функционально
-// На больших расстояниях и при большом масштабе
-// 
-*/
+       
     }
 
-    /*
-         * show you a ShadowTransform's capabilities.
+/////////////////////////////
 
-P.S. If you became too boored, you can end up your tour by closing this window. 
-         *
-         * show you a ShadowTransform's capabilities.
-
-P.S. If you became too boored, you can end up your tour by closing this window. 
-         *
-         */
-
+	// Draw a window
     void OnGUI()
     {
 
         GUILayout.BeginVertical ();
+
+		// For adjusting text label width to a window size (it's resizeble)
         EditorGUIUtility.labelWidth = EditorGUIUtility.currentViewWidth - 50;
 
+		// Different styles for text fields
         GUIStyle styleTitle = new GUIStyle (EditorStyles.boldLabel);
         styleTitle.alignment = TextAnchor.MiddleCenter;
         styleTitle.wordWrap = true;
@@ -187,14 +158,18 @@ P.S. If you became too boored, you can end up your tour by closing this window. 
         styleMainText.richText = true;
         styleMainText.stretchHeight = true;
 
-
+		// Title and main text labels
         GUILayout.Label (stages[currentStage].title, styleTitle);
         GUILayout.Label (stages [currentStage].mainText, styleMainText);
 
+		// Control buttons
         GUILayout.BeginHorizontal ();
 
-        if (GUILayout.Button ("<<")) {
+        if (GUILayout.Button ("<<")) 
+		{
             currentStage--;
+
+			// If we need to focus camera on a certain object - let's do it
             if (stages [currentStage].focusObject != null)
             {
                 EditorGUIUtility.PingObject (stages [currentStage].focusObject);
@@ -203,15 +178,19 @@ P.S. If you became too boored, you can end up your tour by closing this window. 
             }
         }
 
-        if (GUILayout.Button (">>")) {
+        if (GUILayout.Button (">>")) 
+		{
             currentStage++;
-            //Debug.Log (stages [currentStage].focusObject);
-            if (stages [currentStage].focusObject != null)
+
+			// Focusing camera
+			if (stages [currentStage].focusObject != null)
             {
                 EditorGUIUtility.PingObject (stages [currentStage].focusObject);
                 Selection.activeGameObject = stages [currentStage].focusObject;
                 SceneView.lastActiveSceneView.FrameSelected ();
             }
+
+			// Launching game, if we need to do it
             if (stages [currentStage].playTest)
                 if (!EditorApplication.isPlaying)
                     EditorApplication.isPlaying = true;
@@ -221,16 +200,24 @@ P.S. If you became too boored, you can end up your tour by closing this window. 
 
         GUILayout.EndHorizontal ();
 
-        //Rect tst = new Rect (100, 350, 200, 200);
-        doNotShowAnymore = EditorGUILayout.Toggle ("Close & do not show this window anymore", doNotShowAnymore, new GUILayoutOption[] {GUILayout.MaxWidth(500), GUILayout.Width(500), GUILayout.ExpandWidth(true)});
+        // If someone does not want to see this window anymore
+        doNotShowAnymore = EditorGUILayout.Toggle ("Close & do not show this window anymore", 
+			doNotShowAnymore, new GUILayoutOption[] 
+			{GUILayout.MaxWidth(500), GUILayout.Width(500), GUILayout.ExpandWidth(true)});
 
-        if (doNotShowAnymore) {
+		// If so, let's write a parameter in playerprefs (not so good way, but...)
+        if (doNotShowAnymore) 
+		{
             PlayerPrefs.SetInt ("ShadowTransform/HideTour", 1);
             this.Close ();
         }
-
-
+			
         GUILayout.EndVertical ();
     }
 
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// If you need any help, wanna make a proposal, need some advice or
+// want to employ me, feel free to e-mail me: Wolf4D@list.ru
+///////////////////////////////////////////////////////////////////////////////
