@@ -58,7 +58,7 @@ public class SceneTourWindow : EditorWindow
 
         stages [0] = new TourStages ("Welcome to ShadowTransform Tutorial!\n",
                                      "Thank you for downloading our product.\n\n" +
-                                     "This window will guide you throught our great <b>10 steps tour</b>.\n" +
+                                     "This window will guide you through our great <b>10 steps tour</b>.\n" +
                                      "We will show you main capabilities of our <b>ShadowTransform</b>.\n\n" +
                                      "P.S. You can return to this tutorial any time you want using <b><i>''Launch tutorial''</i></b> object in this scene.");
 
@@ -75,8 +75,8 @@ public class SceneTourWindow : EditorWindow
                                      "to make gameplay more interesting.\n\nIt is a good time to make a play-test.\n<b>Press >> to try this level out!</b>", GameObject.Find("JumpPad"));
 
         stages [3] = new TourStages ("3. Play!",
-                                     "\nWe think, you <b>won't</b> get to the landing pad, marked with yellow light from the first trys.\n\n\n\n\n<b>But that's ok.</b> " +
-                                     "Latest experimetal tweaks made this part of our level nearly unpassable.", null, true);
+                                     "\nWe think, you <b>won't</b> get to the landing pad, marked with yellow light from the first tries.\n\n\n\n\n<b>But that's ok.</b> " +
+                                     "Latest experimental tweaks made this part of our level nearly unpassable.", null, true);
 
         stages [4] = new TourStages ("4. Switching between saved states",
                                      "\nBut two of our designers, <b><i>Alice</i></b> and <b><i>Bob</i></b>, has proposed their fixes. " +
@@ -95,12 +95,12 @@ public class SceneTourWindow : EditorWindow
                                      "And you may do this in Inspector even during play!");
 
         stages [6] = new TourStages ("6. ...and that purple things..?",
-                                     "\nThat misterious things are <b>visual representations</b> for remembered states. That things are called <b>shadows</b>." +
-                                     "\n\nEach shadow is labeled by the <b>state's name</b> and <b>object's name</b>.\n" +
+                                     "\nThat mysterious things are <b>visual representations</b> for remembered states. That things are called <b>shadows</b>." +
+                                     "\n\nEach shadow is labelled by the <b>state's name</b> and <b>object's name</b>.\n" +
                                      "\nYou may <b>click</b> on a shadow to <b>select a corresponding object</b>.\n", GameObject.Find("CrateAtEntrance"));
 
         stages [7] = new TourStages ("7. Let's make some play-testing!",
-                                     "\nSelect a <b>RollerBall object</b> and switch its state to <b>''At the begining of the ladder''</b>.\n\n" +
+                                     "\nSelect a <b>RollerBall object</b> and switch its state to <b>''At the beginning of the ladder''</b>.\n\n" +
                                      "<b>Ok.</b> Now play and try to pass through the <b>next platform</b>." +
                                      "\n\nSwitch its <b><i>state</i></b> to another and try to <b>play again</b>.\n" +
                                      "\nSee?\n<i>Play-testing a certain part of the level now is the easiest thing!</i>", GameObject.Find("Ladder1"));
