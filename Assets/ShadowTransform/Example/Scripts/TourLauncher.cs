@@ -7,12 +7,9 @@
 /////////////////////////////
 //
 // Class to provide our shiny tour a not-so-ugly launcher :)
-// It holds state of dialog into PlayerPrefs, which is not a good way, but
-// UnityEditor tools seems does not another good project-wise controls for
-// a tool assets to keep a settings.
+// It holds state of dialog into EditorPrefs.
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 
 using UnityEngine;
 using UnityEditor;
@@ -21,25 +18,20 @@ using System.Collections;
 [ExecuteInEditMode]
 public class TourLauncher : MonoBehaviour
 {
-    public bool ShowTour; // does this tour needs demonstration?
+    public bool ShowTour = false; // does this tour needs demonstration?
 
-    void Awake()
+    // function for checking a saved tour state - true if tour not discarded
+    bool CheckTourState()
     {
-        CheckTourState ();
-    }
-
-    // function for checking a saved tour state
-    void CheckTourState()
-    {
-        if (PlayerPrefs.GetInt ("ShadowTransform/HideTour") != 1)
-            ShowTour = true;
+		if (EditorPrefs.GetInt ("ShadowTransform/HideTour", 0) == 0)
+            return true;
         else
-            ShowTour = false;
+            return false;
     }
 
     void OnValidate()
     {
-        if (ShowTour)
+		if ((CheckTourState ()) || (ShowTour))
             if (!Application.isPlaying)
             {
                 SceneTourWindow w = EditorWindow.GetWindow<SceneTourWindow> ();
@@ -49,3 +41,5 @@ public class TourLauncher : MonoBehaviour
         ShowTour = false;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////

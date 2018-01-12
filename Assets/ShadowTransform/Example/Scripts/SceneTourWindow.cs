@@ -205,10 +205,10 @@ public class SceneTourWindow : EditorWindow
 			doNotShowAnymore, new GUILayoutOption[] 
 			{GUILayout.MaxWidth(500), GUILayout.Width(500), GUILayout.ExpandWidth(true)});
 
-		// If so, let's write a parameter in playerprefs (not so good way, but...)
+		// If so, let's write a parameter in editorprefs 
         if (doNotShowAnymore) 
 		{
-            PlayerPrefs.SetInt ("ShadowTransform/HideTour", 1);
+			EditorPrefs.SetInt ("ShadowTransform/HideTour", 1);
             this.Close ();
         }
 			
