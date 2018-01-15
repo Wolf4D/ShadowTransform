@@ -75,11 +75,6 @@ public class ShadowTransform : MonoBehaviour
         // add new phantom to the phantom array
         phantoms.Add (newPhantom);
 
-		// if object has no meshes - let's say we'll draw a placeholder
-		if (this.GetComponent<MeshFilter> ()==null)
-			Debug.LogWarning ("This GameObject (" + this.gameObject.name +") has no MeshFilters!\n" +
-				"Only Placeholder will be drawn.");
-
         // called manually to draw gizmo before first scene redraw
         EditorUtility.SetDirty(this);
 
