@@ -65,6 +65,11 @@ public class ShadowTransformEditor : Editor
             return;
         }
 
+		// if object has no meshes - let's say we'll draw a placeholder
+		if (shadow.gameObject.GetComponent<MeshFilter> ()==null)
+			EditorGUILayout.HelpBox ("This GameObject has no MeshFilters!\n" +
+			"Placeholder will be drawn.", MessageType.Warning, true);
+
         // Style for drawing caption
         GUIStyle styleCenter = new GUIStyle (GUI.skin.label);
         styleCenter.alignment = TextAnchor.MiddleCenter;

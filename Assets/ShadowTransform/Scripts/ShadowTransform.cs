@@ -29,6 +29,9 @@ public class ShadowState
     public Vector3 position;    // absolute (world) pos of object in this state
     public Vector3 eulerAngles; // absolute (world) rotation of object
     public Vector3 lossyScale;  // absolute (world) scale of object
+
+	// for playtime-to-editor scheme
+	[SerializeField] public int parentShadowTransformID;  // parent ST of this 
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,6 +46,11 @@ public class ShadowTransform : MonoBehaviour
     // TODO: make a shadow color adjustable sometimes somehow
     public Color shadowColor = new Color (0.6f, 0.15f, 0.7f, 0.4f);
 
+	public static bool alreadyConnected = false;
+
+	[SerializeField] static ArrayList playStatesAdd = new ArrayList(); //Dictionary<ShadowTransform, ShadowState> playStates = new Dictionary<ShadowTransform, ShadowState>();
+	[SerializeField] static ArrayList playStatesRemove = new ArrayList();
+
 /////////////////////////////
 
     void Awake ()
@@ -52,6 +60,12 @@ public class ShadowTransform : MonoBehaviour
             Debug.LogWarning ("This GameObject (" + this.gameObject.name +") already has one shadow transform!");
             Destroy (this);
         }
+			
+		if (!alreadyConnected) {
+			EditorApplication.playmodeStateChanged += UpdateShadowTransformsAtPlayExit;
+			alreadyConnected = true;
+		}
+
     }
 
 /////////////////////////////
@@ -64,6 +78,7 @@ public class ShadowTransform : MonoBehaviour
         newPhantom.name = pname; // + " (" + phantoms.Count + ")";
         newPhantom.position = this.gameObject.transform.position;
         newPhantom.eulerAngles = this.gameObject.transform.eulerAngles;
+		newPhantom.parentShadowTransformID = this.GetInstanceID ();
 
         // Hack for calculating global scale - unparent an object,
         // define it's scale, parent it back
@@ -78,6 +93,9 @@ public class ShadowTransform : MonoBehaviour
         // called manually to draw gizmo before first scene redraw
         EditorUtility.SetDirty(this);
 
+		if (Application.isPlaying) 
+			ShadowTransform.playStatesAdd.Add (phantoms [CurrentPhantom ()]);
+		
     }
 
 /////////////////////////////
@@ -103,6 +121,9 @@ public class ShadowTransform : MonoBehaviour
     // Removes state from phantom array
     public void DeletePhantom()
     {
+		if (Application.isPlaying)
+			ShadowTransform.playStatesRemove.Add (phantoms[CurrentPhantom()]);
+		
         phantoms.Remove(phantoms[CurrentPhantom()]);
         EditorUtility.SetDirty(this);
     }
@@ -147,11 +168,10 @@ public class ShadowTransform : MonoBehaviour
             // just should not move static objects during runtime!
             if (!(this.gameObject.isStatic && Application.isPlaying))
             {
-                if (meshFilter!=null)
-                    Gizmos.DrawMesh (meshFilter.sharedMesh, obj.position, Quaternion.Euler (obj.eulerAngles), obj.lossyScale);
-                else
-                    Debug.LogWarning ("This GameObject (" + this.gameObject.name +") has no MeshFilters!\n" +
-                    	"This version won't draw nested meshes - no shadow objects will be drawn.");
+				if (meshFilter != null)
+					Gizmos.DrawMesh (meshFilter.sharedMesh, obj.position, Quaternion.Euler (obj.eulerAngles), obj.lossyScale);
+				else
+					Gizmos.DrawCube (obj.position, obj.lossyScale); // a placeholder object
             }
 
             // Unity's behaviour for handles is kinda strange - handles are
@@ -174,10 +194,62 @@ public class ShadowTransform : MonoBehaviour
         }
     }
 
+	// This method is being called regulary, so playmode-to-editmode
+	// transfer would be made here
+	private static void UpdateShadowTransformsAtPlayExit()
+	{
+		if (!EditorApplication.isPlaying) 
+		{
+			
+			while (playStatesAdd.Count > 0) 
+			{
+
+				ShadowState tmp = (ShadowState)(playStatesAdd [playStatesAdd.Count - 1]);
+				ShadowTransform tmpST = (EditorUtility.InstanceIDToObject (tmp.parentShadowTransformID)) as ShadowTransform;
+				tmpST.phantoms.Add (tmp);
+					
+				playStatesAdd.RemoveAt (playStatesAdd.Count - 1);
+				EditorUtility.SetDirty(tmpST);
+
+			}
+
+			while (playStatesRemove.Count > 0) 
+			{
+				ShadowState tmp = (ShadowState)(playStatesRemove [playStatesRemove.Count - 1]);
+				ShadowTransform tmpST = (EditorUtility.InstanceIDToObject (tmp.parentShadowTransformID)) as ShadowTransform;
+
+				// Copy of currentstate method - bring out compares!!!
+				for (int i = tmpST.phantoms.Count - 1; i >= 0; i--) {
+					ShadowState obj = tmpST.phantoms [i];
+					if (obj != null) {
+
+						if (VectorsAreEqual (obj.position, tmp.position) &&
+						    VectorsAreEqual (obj.eulerAngles, tmp.eulerAngles) &&
+						    VectorsAreEqual (obj.lossyScale, tmp.lossyScale))
+							tmpST.phantoms.Remove (obj);
+					}
+				}		
+
+				playStatesRemove.RemoveAt (playStatesRemove.Count - 1);
+				EditorUtility.SetDirty(tmpST);
+
+
+			}
+
+
+
+		}
+
+		//
+		//Debug.Log (EditorApplication.isPlaying);
+		//while(ShadowTransformEditor::
+		//Debug.Log(ShadowTransformEditor::playStatesAdd);
+	}
+
 /////////////////////////////
 
     // A simple fuzzy compare
-    bool VectorsAreEqual(Vector3 one, Vector3 two)
+    static bool VectorsAreEqual(Vector3 one, Vector3 two)
     {
         return (Mathf.Approximately (one.x, two.x) &&
                         Mathf.Approximately (one.y, two.y) &&
