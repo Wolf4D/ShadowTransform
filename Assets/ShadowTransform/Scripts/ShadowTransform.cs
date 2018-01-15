@@ -75,6 +75,11 @@ public class ShadowTransform : MonoBehaviour
         // add new phantom to the phantom array
         phantoms.Add (newPhantom);
 
+		// if object has no meshes - let's say we'll draw a placeholder
+		if (this.GetComponent<MeshFilter> ()==null)
+			Debug.LogWarning ("This GameObject (" + this.gameObject.name +") has no MeshFilters!\n" +
+				"Only Placeholder will be drawn.");
+
         // called manually to draw gizmo before first scene redraw
         EditorUtility.SetDirty(this);
 
@@ -147,11 +152,10 @@ public class ShadowTransform : MonoBehaviour
             // just should not move static objects during runtime!
             if (!(this.gameObject.isStatic && Application.isPlaying))
             {
-                if (meshFilter!=null)
-                    Gizmos.DrawMesh (meshFilter.sharedMesh, obj.position, Quaternion.Euler (obj.eulerAngles), obj.lossyScale);
-                else
-                    Debug.LogWarning ("This GameObject (" + this.gameObject.name +") has no MeshFilters!\n" +
-                    	"This version won't draw nested meshes - no shadow objects will be drawn.");
+				if (meshFilter != null)
+					Gizmos.DrawMesh (meshFilter.sharedMesh, obj.position, Quaternion.Euler (obj.eulerAngles), obj.lossyScale);
+				else
+					Gizmos.DrawCube (obj.position, obj.lossyScale); // a placeholder object
             }
 
             // Unity's behaviour for handles is kinda strange - handles are
