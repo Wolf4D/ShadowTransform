@@ -41,7 +41,7 @@ public class SceneTourWindow : EditorWindow
     bool doNotShowAnymore = false;
 
 	// Stages (screens) of tour
-    TourStages[] stages = new TourStages[12];
+    TourStages[] stages = new TourStages[13];
 
 	// Current stage
     int currentStage = 0;
@@ -127,10 +127,15 @@ public class SceneTourWindow : EditorWindow
                                       "<b>2)</b> Click on <b>-</b> button between arrows.\n\n" +
                                       "After deleting a state, <b>ShadowTransform</b> will automatically switch to a previous one (if exists).", GameObject.Find("TooSmallPlatform"));
 
-        stages [11] = new TourStages ("Thanks for choosing ShadowTransform!",
+        stages[11] = new TourStages("NEW FEATURES NOTE!",
+                                 "\nYou may also add or delete states <b>during play-mode</b>!\n\n" +
+                                 "When you get <b>back to editor mode</b>, all of your added states <b>would remain</b> in list. Also you may <b>delete states during playmode.</b>\n\n" +
+                                 "It’s kinda useful for <b>playmode-to-editor transferring</b> and <b>tuning level using playmode</b>.\n");
+
+        stages [12] = new TourStages ("Thanks for choosing ShadowTransform!",
                                       "\nNow you know how to use <b>ShadowTransform</b> and ready to unleash its power in your projects!\n\n" +
-                                      "<b>REMEMBER!</b> This asset is free for ANY LEGAL USAGE - just mention our asset in your credits, and write a small letter to us, please :)\n" +
-                                      "Read a readme file for an additional info. If you need some help, advice or technical support, you may write to: Wolf4D@list.ru, Ivan Klenov, at your service :)");
+                                      "<b>REMEMBER!</b> This asset is <b>free</b> for <b>ANY LEGAL USAGE</b> - just mention our asset in your credits, and write a small letter to us, please :)\n" +
+                                      "Read a <b>readme file</b> for an additional info. If you need some help, advice or technical support, you may write to: <b>Wolf4D@list.ru, <i>Ivan Klenov</i>,</b> at your service :)");
 
        
     }
@@ -165,38 +170,48 @@ public class SceneTourWindow : EditorWindow
 		// Control buttons
         GUILayout.BeginHorizontal ();
 
-        if (GUILayout.Button ("<<")) 
-		{
-            currentStage--;
+        if (GUILayout.Button ("<<"))
+            if (!EditorApplication.isPlaying) // lock it in play mode
+		    {
+                // Check array bounds
+                if (currentStage>0)
+                    currentStage--;
 
-			// If we need to focus camera on a certain object - let's do it
-            if (stages [currentStage].focusObject != null)
-            {
-                EditorGUIUtility.PingObject (stages [currentStage].focusObject);
-                Selection.activeGameObject = stages [currentStage].focusObject;
-                SceneView.lastActiveSceneView.FrameSelected ();
-            }
-        }
-
-        if (GUILayout.Button (">>")) 
-		{
-            currentStage++;
-
-			// Focusing camera
-			if (stages [currentStage].focusObject != null)
-            {
-                EditorGUIUtility.PingObject (stages [currentStage].focusObject);
-                Selection.activeGameObject = stages [currentStage].focusObject;
-                SceneView.lastActiveSceneView.FrameSelected ();
+			    // If we need to focus camera on a certain object - let's do it
+                if (stages [currentStage].focusObject != null)
+                {
+                   EditorGUIUtility.PingObject (stages [currentStage].focusObject);
+                   Selection.activeGameObject = stages [currentStage].focusObject;
+                   SceneView.lastActiveSceneView.FrameSelected ();
+                }
             }
 
-			// Launching game, if we need to do it
-            if (stages [currentStage].playTest)
-                if (!EditorApplication.isPlaying)
-                    EditorApplication.isPlaying = true;
+        if (GUILayout.Button (">>"))
+            if (!EditorApplication.isPlaying) // lock it in play mode
+		    {
+                currentStage++;
 
+                // Check array bounds
+                if (currentStage < stages.Length)
+                {
 
-        }
+                    // Focusing camera
+                    if (stages[currentStage].focusObject != null)
+                    {
+                        EditorGUIUtility.PingObject(stages[currentStage].focusObject);
+                        Selection.activeGameObject = stages[currentStage].focusObject;
+                        SceneView.lastActiveSceneView.FrameSelected();
+                    }
+
+                    // Launching game, if we need to do it
+                    if (stages[currentStage].playTest)
+                        if (!EditorApplication.isPlaying)
+                            EditorApplication.isPlaying = true;
+                }
+                else  // close and don't show anymore at last element
+                    doNotShowAnymore = true;
+
+            }
 
         GUILayout.EndHorizontal ();
 
