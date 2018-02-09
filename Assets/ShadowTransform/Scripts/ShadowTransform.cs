@@ -46,9 +46,19 @@ public class ShadowTransform : MonoBehaviour
     // TODO: make a shadow color adjustable sometimes somehow
     public Color shadowColor = new Color (0.6f, 0.15f, 0.7f, 0.4f);
 
+    // ST executes static method for applying all playmode changes after
+    // leaving a playmode back to editor. So, it needs to be connected to 
+    // "game exit" event, and connected only once - not for every copy 
+    // of ST object! So, we need to have a public variable to see if ANY
+    // of our ST's connected.
 	public static bool alreadyConnected = false;
 
-	[SerializeField] static ArrayList playStatesAdd = new ArrayList(); //Dictionary<ShadowTransform, ShadowState> playStates = new Dictionary<ShadowTransform, ShadowState>();
+    // Arrays of changes made with ShadowTransfroms within playmode. 
+    // Values remains after leaving playmode.
+
+    // Added states
+	[SerializeField] static ArrayList playStatesAdd = new ArrayList(); 
+    // Removed states
 	[SerializeField] static ArrayList playStatesRemove = new ArrayList();
 
 /////////////////////////////
@@ -61,6 +71,7 @@ public class ShadowTransform : MonoBehaviour
             Destroy (this);
         }
 			
+        // If static method is not connected - let's connect it
 		if (!alreadyConnected) {
 			EditorApplication.playmodeStateChanged += UpdateShadowTransformsAtPlayExit;
 			alreadyConnected = true;
@@ -93,6 +104,7 @@ public class ShadowTransform : MonoBehaviour
         // called manually to draw gizmo before first scene redraw
         EditorUtility.SetDirty(this);
 
+        // If in playmode - add state to array of changes
 		if (Application.isPlaying) 
 			ShadowTransform.playStatesAdd.Add (phantoms [CurrentPhantom ()]);
 		
@@ -121,6 +133,7 @@ public class ShadowTransform : MonoBehaviour
     // Removes state from phantom array
     public void DeletePhantom()
     {
+        // If in playmode - add state to array of changes
 		if (Application.isPlaying)
 			ShadowTransform.playStatesRemove.Add (phantoms[CurrentPhantom()]);
 		
@@ -194,56 +207,74 @@ public class ShadowTransform : MonoBehaviour
         }
     }
 
-	// This method is being called regulary, so playmode-to-editmode
-	// transfer would be made here
+/////////////////////////////
+	
+    // This method is being called by event, so playmode-to-editmode
+	// transfer happens here
 	private static void UpdateShadowTransformsAtPlayExit()
 	{
+        // If game has ended
 		if (!EditorApplication.isPlaying) 
 		{
 			
+            // Taking all elements of array of new states one by one,
+            // from the last (ahhh, where are Qt's TakeItem or simple
+            // and nice mutable iterators?..)
 			while (playStatesAdd.Count > 0) 
 			{
-
 				ShadowState tmp = (ShadowState)(playStatesAdd [playStatesAdd.Count - 1]);
+
+                // Strong magic here. After going from play mode to editor, all
+                // references breaks, and you simply can't find out what object
+                // had this state. One way to bear that is to remember object's
+                // INSTANCE ID - it's unique and does not change nor in 
+                // playmode nor in editor mode. And it's easy to find object 
+                // in scene using this identifier.
 				ShadowTransform tmpST = (EditorUtility.InstanceIDToObject (tmp.parentShadowTransformID)) as ShadowTransform;
-				tmpST.phantoms.Add (tmp);
+
+                // When it's found - let's just add a new state here
+                if (tmpST!=null)
+				    tmpST.phantoms.Add (tmp);
 					
+                // Remove processed element from array
 				playStatesAdd.RemoveAt (playStatesAdd.Count - 1);
-				EditorUtility.SetDirty(tmpST);
+                
+                // Redraw changed ShadowTransform
+                if (tmpST != null)
+                    EditorUtility.SetDirty(tmpST);
 
 			}
 
+            // The same thing for removing states, but...
 			while (playStatesRemove.Count > 0) 
 			{
 				ShadowState tmp = (ShadowState)(playStatesRemove [playStatesRemove.Count - 1]);
 				ShadowTransform tmpST = (EditorUtility.InstanceIDToObject (tmp.parentShadowTransformID)) as ShadowTransform;
 
-				// Copy of currentstate method - bring out compares!!!
-				for (int i = tmpST.phantoms.Count - 1; i >= 0; i--) {
-					ShadowState obj = tmpST.phantoms [i];
-					if (obj != null) {
+                // Finding which state we should remove
 
-						if (VectorsAreEqual (obj.position, tmp.position) &&
-						    VectorsAreEqual (obj.eulerAngles, tmp.eulerAngles) &&
-						    VectorsAreEqual (obj.lossyScale, tmp.lossyScale))
-							tmpST.phantoms.Remove (obj);
-					}
-				}		
+				// TODO: That's the copy of currentstate method - bring out compare to dedeicated procedures
+                if (tmpST!=null)
+				    for (int i = tmpST.phantoms.Count - 1; i >= 0; i--) 
+                    {
+					    ShadowState obj = tmpST.phantoms [i];
+					    if (obj != null) 
+                        {
+						    if (VectorsAreEqual (obj.position, tmp.position) &&
+						        VectorsAreEqual (obj.eulerAngles, tmp.eulerAngles) &&
+						        VectorsAreEqual (obj.lossyScale, tmp.lossyScale))
+							    tmpST.phantoms.Remove (obj);
+					    }
+				    }
 
+                // Remove processed element from array
 				playStatesRemove.RemoveAt (playStatesRemove.Count - 1);
-				EditorUtility.SetDirty(tmpST);
 
-
+                // Redraw changed ShadowTransform
+                if (tmpST != null)
+				    EditorUtility.SetDirty(tmpST);
 			}
-
-
-
 		}
-
-		//
-		//Debug.Log (EditorApplication.isPlaying);
-		//while(ShadowTransformEditor::
-		//Debug.Log(ShadowTransformEditor::playStatesAdd);
 	}
 
 /////////////////////////////
