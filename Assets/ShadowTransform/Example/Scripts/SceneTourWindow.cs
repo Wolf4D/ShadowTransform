@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-// ShadowTransform by Ivan Klenov (aka Wolf4D). 2017.
+// ShadowTransform by Ivan Klenov (aka Wolf4D). 2018.
 //
 // All rights reserved.
-// Under Creative Commons Attribution (CC BY) License.
-// So, use it as you wish, just include me in credits.
+// Under BSD-3-Clause License.
+// So, use it as you wish, just don't remove this credits.
 /////////////////////////////
 //
 // Class for Tutorial Tour window. A very tricky thing.
@@ -134,7 +134,7 @@ public class SceneTourWindow : EditorWindow
 
         stages [12] = new TourStages ("Thanks for choosing ShadowTransform!",
                                       "\nNow you know how to use <b>ShadowTransform</b> and ready to unleash its power in your projects!\n\n" +
-                                      "<b>REMEMBER!</b> This asset is <b>free</b> for <b>ANY LEGAL USAGE</b> - just mention our asset in your credits, and write a small letter to us, please :)\n" +
+                                      "<b>REMEMBER!</b> This asset is <b>free</b> for <b>ANY LEGAL USAGE</b> - but <i>if you like it</i>, you may mention it in your credits, and write a small letter to me :)\n" +
                                       "Read a <b>readme file</b> for an additional info. If you need some help, advice or technical support, you may write to: <b>Wolf4D@list.ru, <i>Ivan Klenov</i>,</b> at your service :)");
 
        

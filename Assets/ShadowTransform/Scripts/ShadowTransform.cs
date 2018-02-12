@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-// ShadowTransform by Ivan Klenov (aka Wolf4D). 2017.
+// ShadowTransform by Ivan Klenov (aka Wolf4D). 2018.
 //
 // All rights reserved.
-// Under Creative Commons Attribution (CC BY) License.
-// So, use it as you wish, just include me in credits.
+// Under BSD-3-Clause License.
+// So, use it as you wish, just don't remove this credits.
 /////////////////////////////
 //
 // Main script for ShadowTransform. A heart of it all :)
