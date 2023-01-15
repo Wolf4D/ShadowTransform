@@ -1,6 +1,8 @@
 # **SHADOW TRANSFORM**
 
-Unity3D editor asset for easy saving multiple positions for an object. Read a longer and more complex version of this document in Docs folder.
+![](https://www.madnesstudio.ru/wp-content/uploads/2018/06/st2-768x290.jpg)
+
+That's a Unity3D editor asset for easy saving multiple positions for an object. Read a longer and more complex version of this document in Docs folder.
 
 **Contents**
 
@@ -47,8 +49,6 @@ You'll need **«Cameras», «Characters», «Effects»** and **«Particle System
 **If you've downloaded a package from https://madnesstudio.ru/ site, it's already inside.**
 
 After this (for GitHub version) just place contents of Assets/ShadowTransform folder into your project's folder.
-
-#
 
 # How to use?
 Check Docs folder for a ReadMe file.
